@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true"
+          android:background="?android:selectableItemBackground">
+        <shape
+               android:shape="rectangle"
+               android:visible="true"  >
+            <corners
+                    android:radius="@dimen/button_rounded_more"
+            />
+            <solid
+                    android:color="@color/btnColorPressed"
+            />
+            <stroke
+                    android:width="0.5dp"
+                    android:color="@color/themeColor"
+            />
+        </shape>
+    </item>
+
+    <item android:background="?android:selectableItemBackground">
+        <shape
+                android:shape="rectangle"
+                android:visible="true"  >
+            <corners
+                    android:radius="@dimen/button_rounded_more"
+            />
+            <solid
+                    android:color="@color/btnColor"
+            />
+            <stroke
+                    android:width="0.5dp"
+                    android:color="@color/themeColor"
+            />
+        </shape>
+    </item>
+</selector>

@@ -14,4 +14,12 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <style name="TextColorStyle">
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:textColorHint">@color/textColorHint</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">15dp</item>
+    </style>
+
 </resources>

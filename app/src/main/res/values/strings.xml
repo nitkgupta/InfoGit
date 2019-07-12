@@ -2,4 +2,7 @@
     <string name="app_name">InfoGit</string>
     <string name="action_settings">Settings</string>
     <string name="get_started">Get Started</string>
+    <string name="hint_enter_name">Enter a name or id to search Github</string>
+    <string name="search_github">Search Github</string>
+    <string name="error_please_enter_a_name">Please enter a name or id before proceeding.</string>
 </resources>

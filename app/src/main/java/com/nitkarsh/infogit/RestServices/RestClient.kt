@@ -2,6 +2,7 @@ package com.nitkarsh.infogit.RestServices
 
 import com.nitkarsh.infogit.BuildConfig
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -10,6 +11,9 @@ import java.util.concurrent.TimeUnit
 class RestClient {
 
     companion object {
+
+        private var apiService: ApiService? = null
+        private var httpLoggingInterceptor = HttpLoggingInterceptor().also { it.level = HttpLoggingInterceptor.Level.BODY }
 
         private val retrofit by lazy {
             retrofit2.Retrofit.Builder()
@@ -22,16 +26,20 @@ class RestClient {
         private fun getOkHttpClient(): OkHttpClient {
             return OkHttpClient.Builder()
                 .connectTimeout(3, TimeUnit.MINUTES)
-                .writeTimeout(50, TimeUnit.SECONDS)
-                .readTimeout(50, TimeUnit.SECONDS)
-                .addInterceptor { chain ->
-                    val original = chain.request()
-                    val request = original.newBuilder().build()
-                    chain.proceed(request)
-                }
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .addInterceptor(httpLoggingInterceptor)
                 .build()
         }
 
         fun getClient(): Retrofit = retrofit
+
+        fun getApiService(): ApiService {
+            if (apiService == null) {
+                apiService = getClient().create(ApiService::class.java)
+            }
+            return apiService!!
+        }
+
     }
 }
