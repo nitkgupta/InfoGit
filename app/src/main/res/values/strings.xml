@@ -11,4 +11,21 @@
     <string name="site_admin">Site Admin : %s</string>
     <string name="score">Score : %s</string>
     <string name="user_name">UserName : %s</string>
+
+    <string name="name">Name</string>
+    <string name="login_name">Login Name</string>
+    <string name="company">Company</string>
+    <string name="location">Location</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="account_creation_date">Account Creation Date</string>
+    <string name="lat_updated">Last Updated</string>
+    <string name="public_repos">Public Repositories</string>
+    <string name="email">Email</string>
+    <string name="hireable">Hireable</string>
+    <string name="bio">Bio</string>
+    <string name="browse_user">Browse User</string>
+    <string name="public_gists">Public Gists</string>
+    <string name="error_empty_browse_url">Error in browsing. No url specified.</string>
+    <string name="some_error_occured">Some Error Occured</string>
 </resources>

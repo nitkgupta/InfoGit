@@ -89,7 +89,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            />
+    />
     <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvInfoSearch"
             android:layout_width="wrap_content"
@@ -101,12 +101,7 @@
             app:layout_constraintTop_toBottomOf="@id/ivSearchImg"
             app:layout_constraintStart_toStartOf="@id/ivSearchImg"
             app:layout_constraintEnd_toEndOf="@id/ivSearchImg"
-            />
-    <androidx.constraintlayout.widget.Group
-            android:id="@+id/groupImgText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="tvInfoSearch,ivSearchImg"/>
+    />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvProfiles"
@@ -117,7 +112,21 @@
             tools:listitem="@layout/item_user_profiles"
             app:layout_constraintTop_toBottomOf="@id/view"
             app:layout_constraintBottom_toBottomOf="parent"
-            />
+    />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="btnSearch,rvProfiles,groupImgText,view,etSearchQuery"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

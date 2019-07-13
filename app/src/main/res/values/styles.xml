@@ -20,10 +20,23 @@
 
     <style name="TextColorStyle">
         <item name="android:textColor">@color/textColor</item>
-        <item name="android:textColorHint">@color/textColorHint</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:padding">15dp</item>
+        <item name="android:textSize">17sp</item>
+        <item name="layout_constrainedWidth">true</item>
+        <item name="layout_constraintHorizontal_bias">0</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:layout_marginEnd">15dp</item>
+    </style>
+
+    <style name="TextColorAlternateStyle">
+        <item name="android:textColor">@color/textColorAlternate</item>
+        <item name="android:textSize">14sp</item>
+        <item name="layout_constrainedWidth">true</item>
+        <item name="layout_constraintHorizontal_bias">0</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:layout_margin">15dp</item>
     </style>
 
 </resources>

@@ -12,4 +12,5 @@
     <color name="endGradientNormal">#F63F41</color>
     <color name="endGradientPressed">#BF392E</color>
     <color name="drawableBlack">#bb000000</color>
+    <color name="textColorAlternate">#645F5F</color>
 </resources>

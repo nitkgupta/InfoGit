@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:orientation="vertical"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content">
+
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvKey"
+            android:layout_width="wrap_content"
+            app:layout_constraintHorizontal_bias="0"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/TextColorAlternateStyle"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="@string/public_repos"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvValue"
+            android:layout_width="wrap_content"
+            app:layout_constraintHorizontal_bias="0"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
+            tools:text="Nitkarsh Gupta"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/TextColorStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvKey"/>
+
+    <View
+            android:id="@+id/viewPublicRepo"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvValue"
+            android:background="@drawable/background_splash"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,6 +13,7 @@ import retrofit2.Response
 class SearchUsersViewModel: ViewModel() {
 
     var searchResponse = MutableLiveData<SearchResponse>()
+    var message = MutableLiveData<String>()
 
     fun getSearchData(query: String,page: Int) {
         RestClient.getApiService().searchUsers(query,page).enqueue(object : Callback<SearchResponse>{
@@ -21,7 +22,13 @@ class SearchUsersViewModel: ViewModel() {
             }
 
             override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
-                searchResponse.value = response.body()
+                if(response.code() == 403) {
+                    message.value = response.message()
+                    return
+                }
+                (response.body()).let { searchResponse.value = response.body() }
+
+
             }
         })
     }
