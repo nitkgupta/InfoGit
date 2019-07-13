@@ -24,7 +24,7 @@ data class UsersResponse @JvmOverloads constructor(@SerializedName("login") @Exp
                                                    @SerializedName("received_events_url") @Expose var receivedEventsUrl: String? = null,
                                                    @SerializedName("type") @Expose var type: String? = null,
                                                    @SerializedName("site_admin") @Expose var siteAdmin: Boolean? = false,
-                                                   @SerializedName("name") @Expose var name: String,
+                                                   @SerializedName("name") @Expose var name: String? = null,
                                                    @SerializedName("company") @Expose var company: String? = null,
                                                    @SerializedName("blog") @Expose var blog: String? = null,
                                                    @SerializedName("location") @Expose var location: String? = null,

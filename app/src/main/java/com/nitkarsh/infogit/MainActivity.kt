@@ -17,6 +17,10 @@ import com.nitkarsh.infogit.utils.Fonts
 import com.nitkarsh.infogit.utils.Utils
 import com.nitkarsh.infogit.viewModels.SearchUsersViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
     override fun onUserClick(position: Int) {
@@ -26,6 +30,7 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
 
     private lateinit var searchUsersViewModel: SearchUsersViewModel
     private var userListAdapter: UserListAdapter? = null
+    private var backPressCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,11 +76,20 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
 
         btnSearch.setOnClickListener {
             if (!etSearchQuery.text.isNullOrEmpty()) {
-                searchUsersViewModel.getSearchData(etSearchQuery.text.toString(), 1)
+                searchUsersViewModel.getSearchData(etSearchQuery.text.toString(), 1,this)
                 Utils.hideKeyboard(this)
             } else {
                 Toast.makeText(this, getString(R.string.error_please_enter_a_name), Toast.LENGTH_SHORT).show()
             }
+        }
+        if(savedInstanceState != null) {
+            if (supportFragmentManager.backStackEntryCount > 0
+                && supportFragmentManager.findFragmentByTag(ProfileInfoFragment::class.java.name) != null) {
+                constraintContainer.visibility = View.VISIBLE
+                groupMain.visibility = View.GONE
+                setTitleText(getString(R.string.profile_details),false)
+            }
+
         }
     }
 
@@ -104,6 +118,7 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
             }
             constraintContainer.visibility = View.VISIBLE
             groupMain.visibility = View.GONE
+            setTitleText(getString(R.string.profile_details),false)
         } else {
             if (supportFragmentManager.backStackEntryCount > 0
                 && supportFragmentManager.findFragmentByTag(ProfileInfoFragment::class.java.name) != null) {
@@ -111,6 +126,7 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
             }
             constraintContainer.visibility = View.GONE
             groupMain.visibility = View.VISIBLE
+            setTitleText(getString(R.string.search_github),true)
         }
     }
 
@@ -122,7 +138,37 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
                 super.onBackPressed()
             }
         } else {
+            finishAfterTwo()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(supportFragmentManager.backStackEntryCount == 1 && supportFragmentManager.findFragmentByTag(ProfileInfoFragment::class.java.name) != null) {
+            setTitleText(getString(R.string.profile_details),false)
+        } else {
+            setTitleText(getString(R.string.search_github),true)
+        }
+    }
+
+    public fun setTitleText(title: String, setIcon: Boolean) {
+        tvToolbar.text = title
+        if(setIcon) {
+            tvToolbar.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_worker,0)
+        } else {
+            tvToolbar.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0)
+        }
+    }
+    private fun finishAfterTwo() {
+        backPressCount++
+        GlobalScope.launch(Dispatchers.IO) {
+            delay(2000)
+            backPressCount = 0
+        }
+        if(backPressCount == 2) {
             finishAffinity()
+        } else {
+            Toast.makeText(this,getString(R.string.press_back_again_to_exit),Toast.LENGTH_SHORT).show()
         }
     }
 }

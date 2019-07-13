@@ -34,8 +34,8 @@ class ProfileInfoFragment : Fragment() {
 
     companion object {
         fun newInstance(login: String): ProfileInfoFragment {
-            var profileInfoFragment = ProfileInfoFragment()
-            var bundle = Bundle()
+            val profileInfoFragment = ProfileInfoFragment()
+            val bundle = Bundle()
             bundle.putString(Constants.KEY_LOGIN,login)
             profileInfoFragment.arguments = bundle
             return profileInfoFragment
@@ -83,13 +83,13 @@ class ProfileInfoFragment : Fragment() {
             }
         }
         if(!login.isNullOrEmpty()) {
-            userDetailViewModel.getData(login!!)
+            userDetailViewModel.getData(login!!,context!!)
         }
 
         userDetailViewModel.usersResponse.observe(this, Observer {
             it?.let {
-                if(!it.name.isEmpty()) {
-                    listData.add(Store(getString(R.string.name),it.name))
+                if(!it.name.isNullOrEmpty()) {
+                    listData.add(Store(getString(R.string.name),it.name!!))
                 }
                 if(it.login.isEmpty()) {
                     listData.add(Store(getString(R.string.login_name),it.login))
@@ -142,7 +142,15 @@ class ProfileInfoFragment : Fragment() {
                 .apply(RequestOptions.circleCropTransform())
                 .error(R.drawable.ic_placeholder_man)
                 .into(ivAvatar)
-           browseUrl = it.htmlUrl
+
+            if(!it.htmlUrl.isNullOrEmpty()) {
+                tvBrowse.visibility = View.VISIBLE
+            }
         })
+    }
+
+    override fun onDestroy() {
+        System.gc()
+        super.onDestroy()
     }
 }

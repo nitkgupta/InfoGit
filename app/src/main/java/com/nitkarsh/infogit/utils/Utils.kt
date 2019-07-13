@@ -1,14 +1,16 @@
 package com.nitkarsh.infogit.utils
 
 import android.annotation.SuppressLint
-import java.text.SimpleDateFormat
-import android.content.Context.INPUT_METHOD_SERVICE
-import androidx.core.content.ContextCompat.getSystemService
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
-import android.view.inputmethod.InputMethodManager
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 object Utils {
@@ -18,6 +20,7 @@ object Utils {
         var dateTime = dateTime
         val sdfFrom = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val sdfTo = SimpleDateFormat("dd MMM, yyyy h:mm a")
+        sdfFrom.timeZone = TimeZone.getTimeZone("UTC")
         try {
             dateTime =
                 dateTime.replace("T", " ").split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
@@ -109,4 +112,43 @@ object Utils {
         i.data = Uri.parse(url)
         context.startActivity(i)
     }
+
+    private var dialog: Dialog? = null
+
+    fun showLoadingDialog(context: Context) {
+        try {
+            if (dialog != null) {
+                if (dialog!!.isShowing) {
+                    dialog?.dismiss()
+                }
+            }
+            if (context is Activity) {
+                if (context.isFinishing) {
+                    return
+                }
+            }
+            dialog = Dialog(context)
+            val layoutParams = dialog!!.window!!.attributes
+            layoutParams.dimAmount = 0.6f
+            dialog?.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            dialog?.setCancelable(false)
+            dialog?.setContentView(com.nitkarsh.infogit.R.layout.dialog_loading)
+            dialog?.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun dismissLoadingDialog() {
+        try {
+            if (dialog != null) {
+                dialog?.dismiss()
+                dialog = null
+            }
+        } catch (e: Exception) {
+            Log.e("e", "=$e")
+        }
+
+    }
+
 }

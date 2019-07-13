@@ -13,4 +13,6 @@
     <color name="endGradientPressed">#BF392E</color>
     <color name="drawableBlack">#bb000000</color>
     <color name="textColorAlternate">#645F5F</color>
+    <color name="translucent_black">#52252222</color>
+    <color name="transparent">#00000000</color>
 </resources>
