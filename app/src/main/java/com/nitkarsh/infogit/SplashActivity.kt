@@ -1,41 +1,44 @@
 package com.nitkarsh.infogit
 
-import android.graphics.Typeface
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import com.nitkarsh.infogit.RestServices.models.SearchResponse
-import com.nitkarsh.infogit.RestServices.models.UsersResponse
+import androidx.appcompat.app.AppCompatActivity
 import com.nitkarsh.infogit.utils.Fonts
-import com.nitkarsh.infogit.viewModels.SearchUsersViewModel
 import kotlinx.android.synthetic.main.activity_splash.*
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity(), CoroutineScope {
 
-    private lateinit var searchUsersViewModel:SearchUsersViewModel
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job + exception
+
+    private lateinit var job: Job
+
+    private val exception = CoroutineExceptionHandler { _, exception -> run { exception.printStackTrace() } }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        job = Job()
+        tvWelcome.typeface = Fonts.mavenMedium(this)
 
-        searchUsersViewModel = ViewModelProviders.of(this).get(SearchUsersViewModel::class.java)
-
-        tvWelcome.typeface = Fonts.avenirNext(this)
-        btnSearch.typeface = Fonts.mavenRegular(this)
-        edtQuery.typeface = Fonts.mavenRegular(this)
-
-        searchUsersViewModel.searchResponse.observe(this, Observer<SearchResponse> {
-            Toast.makeText(this,it.totalCount.toString(),Toast.LENGTH_SHORT).show()
-        })
-
-        btnSearch.setOnClickListener {
-            if(!edtQuery.text.isNullOrEmpty()) {
-                searchUsersViewModel.getSearchData(edtQuery.text.toString(), 1)
-            } else {
-                Toast.makeText(this,getString(R.string.error_please_enter_a_name),Toast.LENGTH_SHORT).show()
-            }
+        GlobalScope.launch(Dispatchers.IO + job + exception) {
+            delay(1500)
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
         }
+    }
+
+    override fun onResume() {
+        if (job.isCancelled) {
+            job.start()
+        }
+        super.onResume()
+    }
+
+    override fun onDestroy() {
+        job.cancel()
+        super.onDestroy()
     }
 }

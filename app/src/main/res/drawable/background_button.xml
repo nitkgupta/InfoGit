@@ -5,16 +5,19 @@
           android:background="?android:selectableItemBackground">
         <shape
                android:shape="rectangle"
-               android:visible="true"  >
+               android:visible="true">
             <corners
-                    android:radius="@dimen/button_rounded_more"
+                    android:topRightRadius="@dimen/button_rounded_more"
+                    android:bottomRightRadius="@dimen/button_rounded_more"
             />
             <solid
-                    android:color="@color/btnColorPressed"
+                    android:color="@color/themeColor"
             />
+            <gradient android:startColor="@color/startGradientPressed"
+                      android:endColor="@color/endGradientPressed" />
             <stroke
                     android:width="0.5dp"
-                    android:color="@color/themeColor"
+                    android:color="@color/textColor"
             />
         </shape>
     </item>
@@ -24,14 +27,17 @@
                 android:shape="rectangle"
                 android:visible="true"  >
             <corners
-                    android:radius="@dimen/button_rounded_more"
+                    android:topRightRadius="@dimen/button_rounded_more"
+                    android:bottomRightRadius="@dimen/button_rounded_more"
             />
             <solid
-                    android:color="@color/btnColor"
+                    android:color="@color/themeColor"
             />
+            <gradient android:startColor="@color/startGradientNormal"
+                      android:endColor="@color/endGradientNormal" />
             <stroke
                     android:width="0.5dp"
-                    android:color="@color/themeColor"
+                    android:color="@color/textColor"
             />
         </shape>
     </item>

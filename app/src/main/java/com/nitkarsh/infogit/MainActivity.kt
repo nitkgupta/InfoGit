@@ -1,14 +1,27 @@
 package com.nitkarsh.infogit
 
+import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.nitkarsh.infogit.RestServices.ApiService
 import com.nitkarsh.infogit.RestServices.RestClient
+import com.nitkarsh.infogit.RestServices.models.SearchResponse
 import com.nitkarsh.infogit.RestServices.models.UsersResponse
+import com.nitkarsh.infogit.utils.Constants
+import com.nitkarsh.infogit.utils.Fonts
+import com.nitkarsh.infogit.viewModels.SearchUsersViewModel
 
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
@@ -16,39 +29,36 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var apiService: ApiService
-    private lateinit var call:Call<UsersResponse>
-    private val callback: Callback<UsersResponse> by lazy { object :Callback<UsersResponse> {
-        override fun onFailure(call: Call<UsersResponse>, t: Throwable) {
-
-        }
-
-        override fun onResponse(call: Call<UsersResponse>, response: Response<UsersResponse>) {
-            Log.e("RESULT------->>>>>",response.body()!!.name)
-        }
-    } }
+    private lateinit var searchUsersViewModel: SearchUsersViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        call.enqueue(callback)
-        return true
-    }
+        searchUsersViewModel = ViewModelProviders.of(this).get(SearchUsersViewModel::class.java)
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+        searchUsersViewModel.searchResponse.observe(this, Observer<SearchResponse> {
+            Toast.makeText(this,it.totalCount.toString(), Toast.LENGTH_SHORT).show()
+            it.usersList.let {
+
+            }
+        })
+
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        tvToolbar.setTypeface(Fonts.mavenRegular(this),Typeface.BOLD)
+        btnSearch.typeface = Fonts.mavenRegular(this)
+        etSearchQuery.typeface = Fonts.mavenRegular(this)
+        rvProfiles.layoutManager = LinearLayoutManager(this,RecyclerView.VERTICAL,false)
+        rvProfiles.itemAnimator = DefaultItemAnimator()
+
+        btnSearch.setOnClickListener {
+            if(!etSearchQuery.text.isNullOrEmpty()) {
+                searchUsersViewModel.getSearchData(etSearchQuery.text.toString(),1)
+            } else {
+                Toast.makeText(this, getString(R.string.error_please_enter_a_name), Toast.LENGTH_SHORT).show()
+            }
         }
     }
+
 }

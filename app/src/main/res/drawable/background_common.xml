@@ -4,8 +4,7 @@
        android:visible="true"  >
 
     <corners
-            android:topLeftRadius="@dimen/button_corner_radius"
-            android:bottomLeftRadius="@dimen/button_corner_radius"
+            android:radius="@dimen/button_rounded_more"
     />
 
     <solid
