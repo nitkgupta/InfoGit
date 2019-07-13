@@ -8,4 +8,7 @@
     <string name="no_result_found">No result found.</string>
     <string name="github_profiles">Search Github Profiles</string>
     <string name="no_github_profile">No Github profile found.</string>
+    <string name="site_admin">Site Admin : %s</string>
+    <string name="score">Score : %s</string>
+    <string name="user_name">UserName : %s</string>
 </resources>
