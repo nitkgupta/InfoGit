@@ -7,10 +7,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nitkarsh.infogit.RestServices.models.SearchResponse
+import com.nitkarsh.infogit.RestServices.models.UsersResponse
 import com.nitkarsh.infogit.adapters.UserListAdapter
 import com.nitkarsh.infogit.fragments.ProfileInfoFragment
 import com.nitkarsh.infogit.utils.Fonts
@@ -25,11 +27,11 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
     override fun onUserClick(position: Int) {
         Toast.makeText(this, "Got your position --> ${position}", Toast.LENGTH_SHORT).show()
-        loadUnloadFragProfile(true,searchUsersViewModel.searchResponse.value?.usersList!![position].login)
+        loadUnloadFragProfile(true,searchUsersViewModel.userResponseLiveData.value!![position]!!.login)
     }
 
     private lateinit var searchUsersViewModel: SearchUsersViewModel
-    private var userListAdapter: UserListAdapter? = null
+    private val userListAdapter by lazy { UserListAdapter(this) }
     private var backPressCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,16 +44,20 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
 
         searchUsersViewModel = ViewModelProviders.of(this).get(SearchUsersViewModel::class.java)
 
-        searchUsersViewModel.searchResponse.observe(this, Observer<SearchResponse> {
-            it.usersList.let {
-                if (userListAdapter == null) {
-                    userListAdapter = UserListAdapter(it!!.toMutableList(), this)
-                    rvProfiles.adapter = userListAdapter
-                } else {
-                    userListAdapter!!.setData(it!!)
-                }
-            }
-            if (it.usersList.isNullOrEmpty()) {
+        searchUsersViewModel.userResponseLiveData.observe(this, Observer<PagedList<UsersResponse>> {
+            it?.let { userListAdapter.submitList(it) }
+        })
+
+        searchUsersViewModel.message.observe(this, Observer {
+            Toast.makeText(this,"Error in call to Github with message:  ${it}",Toast.LENGTH_SHORT).show()
+        })
+
+        searchUsersViewModel.networkState.observe(this, Observer {
+            it?.let { userListAdapter.setNetworkStatus(it) }
+        })
+
+        searchUsersViewModel.listLimit.observe(this, Observer {
+            if(it == 0) {
                 rvProfiles.visibility = View.GONE
                 ivSearchImg.visibility = View.VISIBLE
                 tvInfoSearch.visibility = View.VISIBLE
@@ -63,20 +69,18 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
             }
         })
 
-        searchUsersViewModel.message.observe(this, Observer {
-            Toast.makeText(this,"Error in call to Github with message:  ${it}",Toast.LENGTH_SHORT).show()
-        })
-
         supportActionBar?.setDisplayShowTitleEnabled(false)
         tvToolbar.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD)
         btnSearch.typeface = Fonts.mavenRegular(this)
         etSearchQuery.typeface = Fonts.mavenRegular(this)
         rvProfiles.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvProfiles.itemAnimator = DefaultItemAnimator()
+        rvProfiles.adapter = userListAdapter
 
         btnSearch.setOnClickListener {
             if (!etSearchQuery.text.isNullOrEmpty()) {
-                searchUsersViewModel.getSearchData(etSearchQuery.text.toString(), 1,this)
+                searchUsersViewModel.setQuery(etSearchQuery.text.toString())
+                searchUsersViewModel.searchPagedDataSourceFactory.searchPagedDataSource.invalidate()
                 Utils.hideKeyboard(this)
             } else {
                 Toast.makeText(this, getString(R.string.error_please_enter_a_name), Toast.LENGTH_SHORT).show()

@@ -1,39 +1,54 @@
 package com.nitkarsh.infogit.viewModels
 
-import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.nitkarsh.infogit.RestServices.RestClient
-import com.nitkarsh.infogit.RestServices.models.SearchResponse
-import com.nitkarsh.infogit.utils.Utils
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
+import com.nitkarsh.infogit.RestServices.models.UsersResponse
+import com.nitkarsh.infogit.paging.SearchPagedDataSourceFactory
 
-class SearchUsersViewModel : ViewModel() {
+class SearchUsersViewModel() : ViewModel() {
+    var string: String = ""
+    var networkState: LiveData<Int>
+    var userResponseLiveData: LiveData<PagedList<UsersResponse>>
+    var searchPagedDataSourceFactory: SearchPagedDataSourceFactory
+    var message: LiveData<String>
+    val listLimit by lazy { MutableLiveData<Int>() }
 
-    var searchResponse = MutableLiveData<SearchResponse>()
-    var message = MutableLiveData<String>()
-
-    fun getSearchData(query: String, page: Int, context: Context) {
-        Utils.showLoadingDialog(context)
-        RestClient.getApiService().searchUsers(query, page).enqueue(object : Callback<SearchResponse> {
-            override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                Utils.dismissLoadingDialog()
-                t.printStackTrace()
-            }
-
-            override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
-                Utils.dismissLoadingDialog()
-                if (response.code() == 403) {
-                    message.value = response.message()
-                    return
+    init {
+        searchPagedDataSourceFactory = SearchPagedDataSourceFactory(string)
+        networkState = Transformations.switchMap(searchPagedDataSourceFactory.mutableLiveData) { it.networkState }
+        message = Transformations.switchMap(searchPagedDataSourceFactory.mutableLiveData) { it.message }
+        val pagedListConfig = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setInitialLoadSizeHint(15)
+            .setPageSize(15)
+            .build()
+        userResponseLiveData = (LivePagedListBuilder(searchPagedDataSourceFactory, pagedListConfig))
+            .setBoundaryCallback(object : PagedList.BoundaryCallback<UsersResponse>() {
+                override fun onZeroItemsLoaded() {
+                    super.onZeroItemsLoaded()
+                    listLimit.postValue(0)
                 }
-                (response.body()).let { searchResponse.value = response.body() }
 
+                override fun onItemAtEndLoaded(itemAtEnd: UsersResponse) {
+                    super.onItemAtEndLoaded(itemAtEnd)
+                    listLimit.postValue(1)
+                }
 
-            }
-        })
+                override fun onItemAtFrontLoaded(itemAtFront: UsersResponse) {
+                    super.onItemAtFrontLoaded(itemAtFront)
+                    listLimit.postValue(1)
+                }
+            }).build()
     }
+
+    fun setQuery(string: String) {
+        this.string = string
+        searchPagedDataSourceFactory.setQuery(string)
+    }
+
 
 }

@@ -1,10 +1,11 @@
 package com.nitkarsh.infogit.RestServices.models
 
+import androidx.paging.PagedList
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class SearchResponse @JvmOverloads constructor(@SerializedName("total_count") @Expose var totalCount: Int = 0,
-                                                    @SerializedName("items") @Expose var usersList:MutableList<UsersResponse>? = null)
+                                                    @SerializedName("items") @Expose var usersList:List<UsersResponse>? = null)
 
 data class UsersResponse @JvmOverloads constructor(@SerializedName("login") @Expose var login: String,
                                                    @SerializedName("id") @Expose var id: Int,
