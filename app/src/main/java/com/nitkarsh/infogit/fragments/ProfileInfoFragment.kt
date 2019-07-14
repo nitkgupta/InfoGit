@@ -86,8 +86,13 @@ class ProfileInfoFragment : Fragment() {
             userDetailViewModel.getData(login!!,context!!)
         }
 
+        tvFollowers.setOnClickListener {
+            (activity as MainActivity).loadFollowersAdapter(login!!)
+        }
+
         userDetailViewModel.usersResponse.observe(this, Observer {
             it?.let {
+                listData.clear()
                 if(!it.name.isNullOrEmpty()) {
                     listData.add(Store(getString(R.string.name),it.name!!))
                 }
@@ -147,7 +152,9 @@ class ProfileInfoFragment : Fragment() {
                 browseUrl = it.htmlUrl
                 tvBrowse.visibility = View.VISIBLE
             }
-            tvFollowers.visibility = View.VISIBLE
+            if(it.followers != null && it.followers!! > 0) {
+                tvFollowers.visibility = View.VISIBLE
+            }
         })
     }
 

@@ -61,6 +61,7 @@ class UserListAdapter(var callback: CallbackUserAction) :
     private fun isLoadingItem(pos: Int) = pos == itemCount - 1
 
     class ViewHolderUsers(view: View, callback: CallbackUserAction) : RecyclerView.ViewHolder(view) {
+        var constraintTop = view.constraintTop
         var tvScore = view.tvScore
         var tvSiteAdmin = view.tvSiteAdmin
         var tvLoginName = view.tvLoginName

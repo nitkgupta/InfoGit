@@ -30,4 +30,7 @@
     <string name="some_error_occured">Some Error Occured</string>
     <string name="profile_details">Profile Details</string>
     <string name="press_back_again_to_exit">Press back button again to exit.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

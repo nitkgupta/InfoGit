@@ -16,5 +16,5 @@ interface ApiService {
     fun searchUsers(@Query("q") text: String, @Query("page") page: Int) : Call<SearchResponse>
 
     @GET("/users/{userName}/followers")
-    fun getFollowers(@Path(value = "userName",encoded = true) userName: String): Call<MutableList<UsersResponse>>
+    fun getFollowers(@Path(value = "userName",encoded = true) userName: String): Call<List<UsersResponse>>
 }

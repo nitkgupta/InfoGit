@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nitkarsh.infogit.RestServices.models.SearchResponse
 import com.nitkarsh.infogit.RestServices.models.UsersResponse
+import com.nitkarsh.infogit.adapters.FollowersAdapter
 import com.nitkarsh.infogit.adapters.UserListAdapter
+import com.nitkarsh.infogit.fragments.FollowersFragment
 import com.nitkarsh.infogit.fragments.ProfileInfoFragment
 import com.nitkarsh.infogit.utils.Fonts
 import com.nitkarsh.infogit.utils.Utils
@@ -109,8 +111,7 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
         if (load) {
             Utils.hideKeyboard(this)
             if (supportFragmentManager.backStackEntryCount > 0
-                && supportFragmentManager.findFragmentByTag(ProfileInfoFragment::class.java.name) != null
-            ) {
+                && supportFragmentManager.findFragmentByTag(ProfileInfoFragment::class.java.name) != null) {
                 supportFragmentManager.beginTransaction()
                     .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_left)
                     .replace(R.id.constraintContainer, ProfileInfoFragment.newInstance(login), ProfileInfoFragment::class.java.name)
@@ -143,6 +144,7 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
                 loadUnloadFragProfile(false,"")
             } else {
                 super.onBackPressed()
+                setTitleText(getString(R.string.profile_details),false)
             }
         } else {
             finishAfterTwo()
@@ -153,6 +155,8 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
         super.onResume()
         if(supportFragmentManager.backStackEntryCount == 1 && supportFragmentManager.findFragmentByTag(ProfileInfoFragment::class.java.name) != null) {
             setTitleText(getString(R.string.profile_details),false)
+        } else if(supportFragmentManager.backStackEntryCount == 2 && supportFragmentManager.findFragmentByTag(FollowersFragment::class.java.name) != null) {
+            setTitleText(getString(R.string.followers),false)
         } else {
             setTitleText(getString(R.string.search_github),true)
         }
@@ -177,5 +181,25 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
         } else {
             Toast.makeText(this,getString(R.string.press_back_again_to_exit),Toast.LENGTH_SHORT).show()
         }
+    }
+
+    public fun loadFollowersAdapter(login: String){
+        if (supportFragmentManager.backStackEntryCount > 0
+            && supportFragmentManager.findFragmentByTag(FollowersFragment::class.java.name) != null) {
+            supportFragmentManager.beginTransaction()
+                .hide(supportFragmentManager.findFragmentByTag(ProfileInfoFragment::class.java.name)!!)
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_left)
+                .replace(R.id.constraintContainer, FollowersFragment.newInstance(login), FollowersFragment::class.java.name)
+                .addToBackStack(ProfileInfoFragment::class.java.name)
+                .commit()
+        } else {
+            supportFragmentManager.beginTransaction()
+                .hide(supportFragmentManager.findFragmentByTag(ProfileInfoFragment::class.java.name)!!)
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_left)
+                .add(R.id.constraintContainer, FollowersFragment.newInstance(login), FollowersFragment::class.java.name)
+                .addToBackStack(ProfileInfoFragment::class.java.name)
+                .commit()
+        }
+        setTitleText(getString(R.string.followers),false)
     }
 }
