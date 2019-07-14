@@ -16,6 +16,7 @@ class FollowersViewModel: ViewModel(){
     public var followersLiveData = MutableLiveData<List<UsersResponse>>()
     public var message = MutableLiveData<String>()
 
+//    network call to fetch followers
     public fun getData(login: String,context: Context) {
         Utils.showLoadingDialog(context)
         RestClient.getApiService().getFollowers(login).enqueue(object : Callback<List<UsersResponse>> {

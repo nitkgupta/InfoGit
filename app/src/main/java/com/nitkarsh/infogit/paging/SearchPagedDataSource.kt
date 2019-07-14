@@ -10,6 +10,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/*
+ * holds chunks of data which is later loaded into pagedlist
+ */
 class SearchPagedDataSource(var text: String) : PageKeyedDataSource<Int, UsersResponse>() {
 
     val networkState by lazy { MutableLiveData<Int>() }
@@ -24,6 +27,9 @@ class SearchPagedDataSource(var text: String) : PageKeyedDataSource<Int, UsersRe
         }
     }
 
+    /*
+     * call when chunks of data has to be loaded
+     */
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, UsersResponse>) {
         if (!text.isEmpty()) {
             requestUsersData(params.key) { data, after, before ->
@@ -36,6 +42,7 @@ class SearchPagedDataSource(var text: String) : PageKeyedDataSource<Int, UsersRe
 
     }
 
+//    call when data is to be fetched and setvalue to livedata for observing
     private fun requestUsersData(page: Int, result: (List<UsersResponse>, Int, Int) -> Unit) {
         networkState.postValue(UserListAdapter.LOADING)
         RestClient.getApiService().searchUsers(text, page).enqueue(object : Callback<SearchResponse> {

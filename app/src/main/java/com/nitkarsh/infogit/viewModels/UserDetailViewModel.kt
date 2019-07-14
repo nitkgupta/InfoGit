@@ -15,6 +15,7 @@ class UserDetailViewModel: ViewModel() {
     public var usersResponse = MutableLiveData<UsersResponse>()
     public var message = MutableLiveData<String>()
 
+//    newtwork call to get a user details
     public fun getData(login: String,context: Context) {
         Utils.showLoadingDialog(context)
         RestClient.getApiService().getUserData(login).enqueue(object :Callback<UsersResponse> {

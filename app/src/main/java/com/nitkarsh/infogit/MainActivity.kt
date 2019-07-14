@@ -2,6 +2,7 @@ package com.nitkarsh.infogit
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -43,21 +44,33 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-
+        /*
+         *ViewModel to store and manage UI related data in lifecycle conscious way
+         */
         searchUsersViewModel = ViewModelProviders.of(this).get(SearchUsersViewModel::class.java)
 
+        /*
+         *Observing the livedata for list change and pass pagedList to adapter
+         */
         searchUsersViewModel.userResponseLiveData.observe(this, Observer<PagedList<UsersResponse>> {
             it?.let { userListAdapter.submitList(it) }
         })
 
+        /*
+         *Observer for api error message if any
+         */
         searchUsersViewModel.message.observe(this, Observer {
             Toast.makeText(this,"Error in call to Github with message:  ${it}",Toast.LENGTH_SHORT).show()
         })
 
+        /*
+         *Observing the network status to manage the paging ui while fetching data
+         */
         searchUsersViewModel.networkState.observe(this, Observer {
             it?.let { userListAdapter.setNetworkStatus(it) }
         })
 
+//        Observer for observing if no item fetched in pagedlist from network call
         searchUsersViewModel.listLimit.observe(this, Observer {
             if(it == 0) {
                 setUiVisibility(View.VISIBLE)
@@ -74,6 +87,8 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
         rvProfiles.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvProfiles.itemAnimator = DefaultItemAnimator()
         rvProfiles.adapter = userListAdapter
+
+        etSearchQuery.setOnEditorActionListener { textView, i, keyEvent -> btnSearch.performClick()}
 
         btnSearch.setOnClickListener {
             if (!etSearchQuery.text.isNullOrEmpty()) {
@@ -107,6 +122,9 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
         return true
     }
 
+     /*
+      *function for managing the fragment loading and unloading from fragment manager
+      */
     fun loadUnloadFragProfile(load: Boolean,login: String) {
         if (load) {
             Utils.hideKeyboard(this)
@@ -170,8 +188,16 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
             tvToolbar.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0)
         }
     }
+
+    /*
+     *function to prevent accidental back button press
+     *finish activity if back button pressed two times within 2 sec
+     */
+
     private fun finishAfterTwo() {
         backPressCount++
+
+//       corotines launch  on background thread reset the counter
         GlobalScope.launch(Dispatchers.IO) {
             delay(2000)
             backPressCount = 0
@@ -183,7 +209,8 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
         }
     }
 
-    public fun loadFollowersAdapter(login: String){
+    public fun loadFollowersFragment(login: String){
+        // replaces if Followers fragment alredy exits
         if (supportFragmentManager.backStackEntryCount > 0
             && supportFragmentManager.findFragmentByTag(FollowersFragment::class.java.name) != null) {
             supportFragmentManager.beginTransaction()

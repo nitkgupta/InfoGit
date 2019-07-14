@@ -68,6 +68,7 @@
             android:layout_marginTop="10dp"
             android:textSize="13sp"
             android:minHeight="25dp"
+            android:imeOptions="actionGo"
             android:singleLine="true"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="5dp"

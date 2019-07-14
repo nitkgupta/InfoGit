@@ -23,6 +23,7 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
         job = Job()
         tvWelcome.typeface = Fonts.mavenMedium(this)
 
+//       Coroutines for activate to another activity after a delay of1500 ms on IO thread
         GlobalScope.launch(Dispatchers.IO + job + exception) {
             delay(1500)
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))

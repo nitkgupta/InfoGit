@@ -3,6 +3,9 @@ package com.nitkarsh.infogit.utils
 import android.content.Context
 import android.graphics.Typeface
 
+/*
+ *static class for setting typeface for text
+ */
 class Fonts {
 
     companion object {

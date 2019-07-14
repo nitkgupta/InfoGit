@@ -30,6 +30,7 @@ class FollowersAdapter(var listFollowers: List<UsersResponse>, var callback : Us
             .apply(RequestOptions().circleCrop())
             .error(R.drawable.ic_placeholder_man)
             .into(holder.ivProfileImg)
+
         ConstraintSet().apply {
             clone(holder.constraintTop)
             connect(holder.tvSiteAdmin.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)

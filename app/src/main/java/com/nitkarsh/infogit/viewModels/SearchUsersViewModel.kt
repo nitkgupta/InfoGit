@@ -18,14 +18,26 @@ class SearchUsersViewModel() : ViewModel() {
     val listLimit by lazy { MutableLiveData<Int>() }
 
     init {
+//        DataSource factory
         searchPagedDataSourceFactory = SearchPagedDataSourceFactory(string)
+
+        /*
+         * live data for network state(Between calling an api and receiving the response)
+         */
         networkState = Transformations.switchMap(searchPagedDataSourceFactory.mutableLiveData) { it.networkState }
+
+//        livedata for observing api response message
         message = Transformations.switchMap(searchPagedDataSourceFactory.mutableLiveData) { it.message }
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setInitialLoadSizeHint(15)
             .setPageSize(15)
             .build()
+
+        /*
+         * returns pagedlist which will be used with recyclerview adapter with paging
+         * Boundary Callback in case if no data is laoded or data inserted at front or end
+         */
         userResponseLiveData = (LivePagedListBuilder(searchPagedDataSourceFactory, pagedListConfig))
             .setBoundaryCallback(object : PagedList.BoundaryCallback<UsersResponse>() {
                 override fun onZeroItemsLoaded() {
@@ -45,6 +57,9 @@ class SearchUsersViewModel() : ViewModel() {
             }).build()
     }
 
+    /*
+    * method for setting the text for which network call is to be made and chunks loaded into data source
+     */
     fun setQuery(string: String) {
         this.string = string
         searchPagedDataSourceFactory.setQuery(string)

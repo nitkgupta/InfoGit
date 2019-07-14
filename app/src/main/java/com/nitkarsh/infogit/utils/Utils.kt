@@ -15,6 +15,9 @@ import java.util.*
 
 object Utils {
 
+    /*
+     *method to convert date form TZ in UTC to local to understable datetime
+     */
     @SuppressLint("SimpleDateFormat")
     fun convertDateViaFormatTZ(dateTime: String): String {
         var dateTime = dateTime
@@ -32,6 +35,9 @@ object Utils {
         }
     }
 
+    /*
+     *convert date in simplified and better UX
+     */
     private fun convertDate(dateTime: String): String {
         try {
             val date = dateTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
@@ -91,6 +97,9 @@ object Utils {
         }
     }
 
+    /*
+     *method to hide keyboard
+     */
     fun hideKeyboard(activity: Activity) {
         val view = activity.currentFocus
         if (view != null) {
@@ -103,6 +112,9 @@ object Utils {
         }
     }
 
+    /*
+     *method to open url of type web
+     */
     fun openUrl(context: Context, url: String) {
         var url = url
         if (!url.startsWith("http://") && !url.startsWith("https://"))
@@ -115,6 +127,9 @@ object Utils {
 
     private var dialog: Dialog? = null
 
+    /*
+     *loads a loading dialog generally during a network calls and loading
+     */
     fun showLoadingDialog(context: Context) {
         try {
             if (dialog != null) {
@@ -139,6 +154,7 @@ object Utils {
         }
     }
 
+    //    dismiss the laoding dialog
     fun dismissLoadingDialog() {
         try {
             if (dialog != null) {

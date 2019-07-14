@@ -44,6 +44,7 @@ class UserListAdapter(var callback: CallbackUserAction) :
 
     private fun isLoading() = networkState == LOADING
 
+    //    maintains and call notify whenever network state changes
     fun setNetworkStatus(state: Int) {
         if (state == networkState) return
         networkState = state
@@ -79,11 +80,13 @@ class UserListAdapter(var callback: CallbackUserAction) :
 
     class LoadingVH(view: View) : RecyclerView.ViewHolder(view)
 
+    //    callback for getting the itemClick position
     interface CallbackUserAction {
         fun onUserClick(position: Int)
     }
 
     companion object {
+        //        Diff util for comparision and pagedlist adapter
         val USERRESPONSE_DIFF_UTIL = object : DiffUtil.ItemCallback<UsersResponse>() {
             override fun areItemsTheSame(oldItem: UsersResponse, newItem: UsersResponse) = oldItem === newItem
 
