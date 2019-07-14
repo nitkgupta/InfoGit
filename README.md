@@ -16,3 +16,12 @@ Also it let them navigate to the profile details and their followers.
 | [Retrofit2](https://github.com/square/retrofit) | For making network/api calls |
 | [Paging](https://developer.android.com/topic/libraries/architecture/paging) | For paging the data |
 | [Glide](https://github.com/bumptech/glide) | For processing and caching images |
+
+### Screenshots
+_**Search :**_
+<br><br>
+<img src="/images/SS1.png" width="400" height="700"/>
+<br><br>
+_**User Profile :**_
+<br><br>
+<img src="/images/SS2.png" width="400" height="700"/>
