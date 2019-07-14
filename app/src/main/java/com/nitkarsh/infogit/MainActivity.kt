@@ -58,14 +58,10 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
 
         searchUsersViewModel.listLimit.observe(this, Observer {
             if(it == 0) {
-                rvProfiles.visibility = View.GONE
-                ivSearchImg.visibility = View.VISIBLE
-                tvInfoSearch.visibility = View.VISIBLE
+                setUiVisibility(View.VISIBLE)
                 tvInfoSearch.text = getString(R.string.no_result_found)
             } else {
-                rvProfiles.visibility = View.VISIBLE
-                ivSearchImg.visibility = View.GONE
-                tvInfoSearch.visibility = View.GONE
+                setUiVisibility(View.GONE)
             }
         })
 
@@ -79,6 +75,7 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
 
         btnSearch.setOnClickListener {
             if (!etSearchQuery.text.isNullOrEmpty()) {
+                setUiVisibility(View.GONE)
                 searchUsersViewModel.setQuery(etSearchQuery.text.toString())
                 searchUsersViewModel.searchPagedDataSourceFactory.searchPagedDataSource.invalidate()
                 Utils.hideKeyboard(this)
@@ -95,6 +92,12 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
             }
 
         }
+    }
+
+    fun setUiVisibility(visibility: Int) {
+        rvProfiles.visibility = if(visibility == View.GONE) View.VISIBLE else View.GONE
+        ivSearchImg.visibility = visibility
+        tvInfoSearch.visibility = visibility
     }
 
     override fun onSupportNavigateUp(): Boolean {

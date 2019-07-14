@@ -16,10 +16,33 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tvFollowers"
                 android:layout_marginTop="20dp"
                 tools:src="@drawable/ic_placeholder_man"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvFollowers"
+                android:layout_width="wrap_content"
+                app:layout_constraintHorizontal_bias="0"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/ivAvatar"
+                android:background="@drawable/backround_gradient_rounded"
+                android:text="@string/followers"
+                android:drawableEnd="@drawable/ic_arrow_white"
+                android:drawablePadding="10dp"
+                android:visibility="gone"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@id/ivAvatar"
+                app:layout_constraintStart_toEndOf="@id/ivAvatar"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvProfileDetails"
@@ -29,25 +52,24 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 tools:listitem="@layout/item_profile_details"
-                app:layout_constraintTop_toBottomOf="@id/ivAvatar"
+                app:layout_constraintTop_toBottomOf="@id/ivAvatar"/>
 
-        />
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvBrowse"
-                android:layout_width="match_parent"
-                app:layout_constraintHorizontal_bias="0"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:gravity="center_vertical"
+                android:textSize="14sp"
                 android:visibility="gone"
-                android:background="@drawable/background_common"
+                android:background="@drawable/backround_gradient_rounded"
                 android:text="@string/browse_user"
                 app:layout_constraintStart_toStartOf="parent"
-                style="@style/TextColorStyle"
                 android:padding="12dp"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:drawableEnd="@android:drawable/ic_menu_gallery"
+                android:drawableEnd="@drawable/ic_arrow_white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rvProfileDetails"/>
 

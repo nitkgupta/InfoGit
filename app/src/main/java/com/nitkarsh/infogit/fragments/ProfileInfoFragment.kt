@@ -144,8 +144,10 @@ class ProfileInfoFragment : Fragment() {
                 .into(ivAvatar)
 
             if(!it.htmlUrl.isNullOrEmpty()) {
+                browseUrl = it.htmlUrl
                 tvBrowse.visibility = View.VISIBLE
             }
+            tvFollowers.visibility = View.VISIBLE
         })
     }
 
