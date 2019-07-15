@@ -1,4 +1,4 @@
-package com.nitkarsh.infogit.adapters
+package com.nitkarsh.infogit.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.nitkarsh.infogit.R
-import com.nitkarsh.infogit.RestServices.models.UsersResponse
+import com.nitkarsh.infogit.restservices.models.UsersResponse
 
 class FollowersAdapter(var listFollowers: List<UsersResponse>, var callback : UserListAdapter.CallbackUserAction) : RecyclerView.Adapter<UserListAdapter.ViewHolderUsers>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListAdapter.ViewHolderUsers {

@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".fragments.ProfileInfoFragment">
+            tools:context=".fragment.ProfileInfoFragment">
 
         <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ivAvatar"

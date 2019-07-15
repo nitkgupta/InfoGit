@@ -1,7 +1,7 @@
-package com.nitkarsh.infogit.RestServices
+package com.nitkarsh.infogit.restservices
 
-import com.nitkarsh.infogit.RestServices.models.SearchResponse
-import com.nitkarsh.infogit.RestServices.models.UsersResponse
+import com.nitkarsh.infogit.restservices.models.SearchResponse
+import com.nitkarsh.infogit.restservices.models.UsersResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

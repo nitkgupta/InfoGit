@@ -2,10 +2,10 @@ package com.nitkarsh.infogit.paging
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
-import com.nitkarsh.infogit.RestServices.RestClient
-import com.nitkarsh.infogit.RestServices.models.SearchResponse
-import com.nitkarsh.infogit.RestServices.models.UsersResponse
-import com.nitkarsh.infogit.adapters.UserListAdapter
+import com.nitkarsh.infogit.restservices.RestClient
+import com.nitkarsh.infogit.restservices.models.SearchResponse
+import com.nitkarsh.infogit.restservices.models.UsersResponse
+import com.nitkarsh.infogit.adapter.UserListAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,7 +15,7 @@ import retrofit2.Response
  */
 class SearchPagedDataSource(var text: String) : PageKeyedDataSource<Int, UsersResponse>() {
 
-    val networkState by lazy { MutableLiveData<Int>() }
+    val networkState by lazy { MutableLiveData<UserListAdapter.NetworkState>() }
     val message by lazy { MutableLiveData<String>() }
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, UsersResponse>) {
@@ -44,15 +44,15 @@ class SearchPagedDataSource(var text: String) : PageKeyedDataSource<Int, UsersRe
 
 //    call when data is to be fetched and setvalue to livedata for observing
     private fun requestUsersData(page: Int, result: (List<UsersResponse>, Int, Int) -> Unit) {
-        networkState.postValue(UserListAdapter.LOADING)
+        networkState.postValue(UserListAdapter.NetworkState.LOADING)
         RestClient.getApiService().searchUsers(text, page).enqueue(object : Callback<SearchResponse> {
             override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
                 t.printStackTrace()
-                networkState.postValue(UserListAdapter.LOADED)
+                networkState.postValue(UserListAdapter.NetworkState.LOADED)
             }
 
             override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
-                networkState.postValue(UserListAdapter.LOADED)
+                networkState.postValue(UserListAdapter.NetworkState.LOADED)
                 if (response.code() == 403) {
                     message.value = response.message()
                 }

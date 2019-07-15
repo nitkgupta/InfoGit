@@ -1,4 +1,4 @@
-package com.nitkarsh.infogit.adapters
+package com.nitkarsh.infogit.adapter
 
 import android.graphics.Typeface
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.nitkarsh.infogit.R
-import com.nitkarsh.infogit.RestServices.models.Store
+import com.nitkarsh.infogit.restservices.models.Store
 import com.nitkarsh.infogit.utils.Fonts
 import kotlinx.android.synthetic.main.item_profile_details.view.*
 

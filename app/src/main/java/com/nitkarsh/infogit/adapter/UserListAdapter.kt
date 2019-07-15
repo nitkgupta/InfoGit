@@ -1,4 +1,4 @@
-package com.nitkarsh.infogit.adapters
+package com.nitkarsh.infogit.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,18 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.nitkarsh.infogit.R
-import com.nitkarsh.infogit.RestServices.models.UsersResponse
+import com.nitkarsh.infogit.restservices.models.UsersResponse
 import com.nitkarsh.infogit.utils.Fonts
 import kotlinx.android.synthetic.main.item_user_profiles.view.*
 
 class UserListAdapter(var callback: CallbackUserAction) :
     PagedListAdapter<UsersResponse, RecyclerView.ViewHolder>(USERRESPONSE_DIFF_UTIL) {
 
-    private var networkState = LOADED
+    private var networkState = NetworkState.LOADED
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == VIEW_TYPE_USERS) {
+        return if (viewType == ViewType.VIEW_TYPE_USERS.i) {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_user_profiles, parent, false)
             return ViewHolderUsers(view, callback)
         } else {
@@ -42,10 +42,10 @@ class UserListAdapter(var callback: CallbackUserAction) :
         }
     }
 
-    private fun isLoading() = networkState == LOADING
+    private fun isLoading() = networkState == NetworkState.LOADING
 
     //    maintains and call notify whenever network state changes
-    fun setNetworkStatus(state: Int) {
+    fun setNetworkStatus(state: NetworkState) {
         if (state == networkState) return
         networkState = state
         if (isLoading()) notifyItemInserted(itemCount) else notifyItemRemoved(itemCount)
@@ -56,7 +56,7 @@ class UserListAdapter(var callback: CallbackUserAction) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (isLoading() && isLoadingItem(position)) VIEW_TYPE_LOADER else VIEW_TYPE_USERS
+        return if (isLoading() && isLoadingItem(position)) ViewType.VIEW_TYPE_LOADER.i else ViewType.VIEW_TYPE_USERS.i
     }
 
     private fun isLoadingItem(pos: Int) = pos == itemCount - 1
@@ -93,13 +93,14 @@ class UserListAdapter(var callback: CallbackUserAction) :
             override fun areContentsTheSame(oldItem: UsersResponse, newItem: UsersResponse) = oldItem == newItem
 
         }
-
-        const val VIEW_TYPE_LOADER = 0
-        const val VIEW_TYPE_USERS = 2
-
-        const val LOADING = 1
-        const val LOADED = 2
-
+    }
+    enum class NetworkState(val i: Int) {
+        LOADING(1),
+        LOADED(2)
+    }
+    enum class ViewType(val i: Int) {
+        VIEW_TYPE_LOADER(0),
+        VIEW_TYPE_USERS(2)
     }
 
 }

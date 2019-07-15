@@ -1,6 +1,5 @@
-package com.nitkarsh.infogit.RestServices.models
+package com.nitkarsh.infogit.restservices.models
 
-import androidx.paging.PagedList
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 

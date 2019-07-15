@@ -1,4 +1,4 @@
-package com.nitkarsh.infogit.RestServices
+package com.nitkarsh.infogit.restservices
 
 import com.nitkarsh.infogit.BuildConfig
 import okhttp3.OkHttpClient

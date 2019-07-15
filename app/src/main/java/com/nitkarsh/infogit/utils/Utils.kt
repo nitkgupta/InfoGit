@@ -125,48 +125,7 @@ object Utils {
         context.startActivity(i)
     }
 
-    private var dialog: Dialog? = null
 
-    /*
-     *loads a loading dialog generally during a network calls and loading
-     */
-    fun showLoadingDialog(context: Context) {
-        try {
-            dialog?.let {
-                if (dialog!!.isShowing) {
-                    dialog?.dismiss()
-                }
-            }
 
-            if (context is Activity) {
-                if (context.isFinishing) {
-                    return
-                }
-            }
-            dialog = Dialog(context)
-            val layoutParams = dialog!!.window!!.attributes
-            layoutParams.dimAmount = 0.6f
-            dialog?.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            dialog?.setCancelable(false)
-            dialog?.setCanceledOnTouchOutside(false)
-            dialog?.setContentView(com.nitkarsh.infogit.R.layout.dialog_loading)
-            dialog?.show()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    //    dismiss the laoding dialog
-    fun dismissLoadingDialog() {
-        try {
-            dialog?.let {
-                dialog?.dismiss()
-            }
-                dialog = null
-        } catch (e: Exception) {
-            Log.e("e", "=$e")
-        }
-
-    }
 
 }

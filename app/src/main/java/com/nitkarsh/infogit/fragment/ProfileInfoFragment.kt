@@ -1,4 +1,4 @@
-package com.nitkarsh.infogit.fragments
+package com.nitkarsh.infogit.fragment
 
 
 import android.os.Bundle
@@ -16,11 +16,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.nitkarsh.infogit.MainActivity
 import com.nitkarsh.infogit.R
-import com.nitkarsh.infogit.RestServices.models.Store
-import com.nitkarsh.infogit.adapters.ProfileDetailsAdapter
+import com.nitkarsh.infogit.restservices.models.Store
+import com.nitkarsh.infogit.adapter.ProfileDetailsAdapter
 import com.nitkarsh.infogit.utils.Constants
 import com.nitkarsh.infogit.utils.Utils
-import com.nitkarsh.infogit.viewModels.UserDetailViewModel
+import com.nitkarsh.infogit.viewmodel.UserDetailViewModel
 import kotlinx.android.synthetic.main.fragment_profile_info.*
 
 class ProfileInfoFragment : Fragment() {
@@ -83,7 +83,7 @@ class ProfileInfoFragment : Fragment() {
             }
         }
         if (!login.isNullOrEmpty()) {
-            userDetailViewModel.getData(login!!, context!!)
+            userDetailViewModel.getData(login!!, activity!!)
         }
 
         tvFollowers.setOnClickListener {

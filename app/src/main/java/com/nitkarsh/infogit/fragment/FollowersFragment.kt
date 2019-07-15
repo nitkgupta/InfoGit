@@ -1,4 +1,4 @@
-package com.nitkarsh.infogit.fragments
+package com.nitkarsh.infogit.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.nitkarsh.infogit.R
-import com.nitkarsh.infogit.adapters.FollowersAdapter
-import com.nitkarsh.infogit.adapters.UserListAdapter
+import com.nitkarsh.infogit.adapter.FollowersAdapter
+import com.nitkarsh.infogit.adapter.UserListAdapter
 import com.nitkarsh.infogit.utils.Constants
-import com.nitkarsh.infogit.viewModels.FollowersViewModel
+import com.nitkarsh.infogit.viewmodel.FollowersViewModel
 import kotlinx.android.synthetic.main.fragment_followers.*
 
 class FollowersFragment : Fragment(),UserListAdapter.CallbackUserAction {
@@ -65,7 +65,7 @@ class FollowersFragment : Fragment(),UserListAdapter.CallbackUserAction {
             }
         })
 
-        followersViewModel.getData(loginName!!,context!!)
+        followersViewModel.getData(loginName!!,activity!!)
     }
 
     override fun onDestroy() {

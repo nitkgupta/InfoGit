@@ -1,11 +1,11 @@
-package com.nitkarsh.infogit.viewModels
+package com.nitkarsh.infogit.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.nitkarsh.infogit.RestServices.RestClient
-import com.nitkarsh.infogit.RestServices.models.SearchResponse
-import com.nitkarsh.infogit.RestServices.models.UsersResponse
+import com.nitkarsh.infogit.MainActivity
+import com.nitkarsh.infogit.restservices.RestClient
+import com.nitkarsh.infogit.restservices.models.UsersResponse
 import com.nitkarsh.infogit.utils.Utils
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,14 +18,20 @@ class FollowersViewModel: ViewModel(){
 
 //    network call to fetch followers
     public fun getData(login: String,context: Context) {
-        Utils.showLoadingDialog(context)
+    if(context is MainActivity) {
+        context.showLoadingDialog()
+    }
         RestClient.getApiService().getFollowers(login).enqueue(object : Callback<List<UsersResponse>> {
             override fun onFailure(call: Call<List<UsersResponse>>, t: Throwable) {
-                Utils.dismissLoadingDialog()
+                if(context is MainActivity) {
+                    context.dismissLoadingDialog()
+                }
             }
 
             override fun onResponse(call: Call<List<UsersResponse>>, response: Response<List<UsersResponse>>) {
-                Utils.dismissLoadingDialog()
+                if(context is MainActivity) {
+                    context.dismissLoadingDialog()
+                }
                 if(response.code() == 403) {
                     message.value = response.message()
                     return

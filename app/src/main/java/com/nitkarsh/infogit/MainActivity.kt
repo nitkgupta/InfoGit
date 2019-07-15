@@ -1,9 +1,11 @@
 package com.nitkarsh.infogit
 
+import android.app.Dialog
 import android.graphics.Typeface
 import android.os.Bundle
-import android.view.KeyEvent
+import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -12,15 +14,13 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.nitkarsh.infogit.RestServices.models.SearchResponse
-import com.nitkarsh.infogit.RestServices.models.UsersResponse
-import com.nitkarsh.infogit.adapters.FollowersAdapter
-import com.nitkarsh.infogit.adapters.UserListAdapter
-import com.nitkarsh.infogit.fragments.FollowersFragment
-import com.nitkarsh.infogit.fragments.ProfileInfoFragment
+import com.nitkarsh.infogit.restservices.models.UsersResponse
+import com.nitkarsh.infogit.adapter.UserListAdapter
+import com.nitkarsh.infogit.fragment.FollowersFragment
+import com.nitkarsh.infogit.fragment.ProfileInfoFragment
 import com.nitkarsh.infogit.utils.Fonts
 import com.nitkarsh.infogit.utils.Utils
-import com.nitkarsh.infogit.viewModels.SearchUsersViewModel
+import com.nitkarsh.infogit.viewmodel.SearchUsersViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -31,9 +31,7 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
 
     private lateinit var searchUsersViewModel: SearchUsersViewModel
     private val userListAdapter by lazy { UserListAdapter(this) }
-    private var backPressCount = 0
-    private var queryText: String = ""
-    private var isFirstCall: Boolean = true
+    private var dialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,11 +68,11 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
          *Observing the network status to manage the paging ui while fetching data
          */
         searchUsersViewModel.networkState.observe(this, Observer {
-            if(isFirstCall && UserListAdapter.LOADING == it) {
-                Utils.showLoadingDialog(this)
-            } else if (isFirstCall && UserListAdapter.LOADED == it) {
-                isFirstCall = false
-                Utils.dismissLoadingDialog()
+            if(searchUsersViewModel.isFirstCall && UserListAdapter.NetworkState.LOADING == it) {
+                showLoadingDialog()
+            } else if (searchUsersViewModel.isFirstCall && UserListAdapter.NetworkState.LOADED == it) {
+                searchUsersViewModel.isFirstCall = false
+                dismissLoadingDialog()
             }
             it?.let { userListAdapter.setNetworkStatus(it) }
         })
@@ -101,10 +99,10 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
 
         btnSearch.setOnClickListener {
             if (!etSearchQuery.text.isNullOrEmpty()) {
-                if (!queryText.equals(etSearchQuery.text.toString().trim())) {
-                    isFirstCall = true
+                if (!searchUsersViewModel.queryText.equals(etSearchQuery.text.toString().trim())) { /*checks if call is made again for same text*/
+                    searchUsersViewModel.isFirstCall = true
                     setUiVisibility(View.GONE)
-                    queryText = etSearchQuery.text.toString().trim()
+                    searchUsersViewModel.queryText = etSearchQuery.text.toString().trim()
                     searchUsersViewModel.setQuery(etSearchQuery.text.toString().trim())
                     searchUsersViewModel.searchPagedDataSourceFactory.searchPagedDataSource.invalidate()
                     Utils.hideKeyboard(this)
@@ -215,14 +213,14 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
      */
 
     private fun finishAfterTwo() {
-        backPressCount++
+        searchUsersViewModel.backPressCount++
 
 //       corotines launch  on background thread reset the counter
         GlobalScope.launch(Dispatchers.IO) {
             delay(2000)
-            backPressCount = 0
+            searchUsersViewModel.backPressCount = 0
         }
-        if(backPressCount == 2) {
+        if(searchUsersViewModel.backPressCount == 2) {
             finishAffinity()
         } else {
             Toast.makeText(this,getString(R.string.press_back_again_to_exit),Toast.LENGTH_SHORT).show()
@@ -249,4 +247,44 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
         }
         setTitleText(getString(R.string.followers),false)
     }
+
+    /*
+     *loads a loading dialog generally during a network calls and loading
+     */
+    public fun showLoadingDialog() {
+        try {
+            dialog?.let {
+                if (dialog!!.isShowing) {
+                    dialog?.dismiss()
+                }
+            }
+            if (this.isFinishing) {
+                return
+            }
+            dialog = Dialog(this)
+            val layoutParams = dialog!!.window!!.attributes
+            layoutParams.dimAmount = 0.6f
+            dialog?.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            dialog?.setCancelable(false)
+            dialog?.setCanceledOnTouchOutside(false)
+            dialog?.setContentView(com.nitkarsh.infogit.R.layout.dialog_loading)
+            dialog?.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    //    dismiss the laoding dialog
+    public fun dismissLoadingDialog() {
+        try {
+            dialog?.let {
+                dialog?.dismiss()
+            }
+            dialog = null
+        } catch (e: Exception) {
+            Log.e("e", "=$e")
+        }
+
+    }
+
 }

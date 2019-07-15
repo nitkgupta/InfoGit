@@ -1,4 +1,4 @@
-package com.nitkarsh.infogit.viewModels
+package com.nitkarsh.infogit.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,16 +6,20 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.nitkarsh.infogit.RestServices.models.UsersResponse
+import com.nitkarsh.infogit.adapter.UserListAdapter
+import com.nitkarsh.infogit.restservices.models.UsersResponse
 import com.nitkarsh.infogit.paging.SearchPagedDataSourceFactory
 
 class SearchUsersViewModel() : ViewModel() {
     var string: String = ""
-    var networkState: LiveData<Int>
+    var networkState: LiveData<UserListAdapter.NetworkState>
     var userResponseLiveData: LiveData<PagedList<UsersResponse>>
     var searchPagedDataSourceFactory: SearchPagedDataSourceFactory
     var message: LiveData<String>
     val listLimit by lazy { MutableLiveData<Int>() }
+    var queryText: String = ""
+    var isFirstCall: Boolean = true
+    var backPressCount = 0
 
     init {
 //        DataSource factory

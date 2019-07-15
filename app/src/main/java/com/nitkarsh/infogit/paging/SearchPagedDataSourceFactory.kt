@@ -1,9 +1,8 @@
 package com.nitkarsh.infogit.paging
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import com.nitkarsh.infogit.RestServices.models.UsersResponse
+import com.nitkarsh.infogit.restservices.models.UsersResponse
 
 /*
  * class for paging, Provides DataSorce.Factory
