@@ -28,14 +28,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
-    override fun onUserClick(position: Int) {
-        Toast.makeText(this, "Got your position --> ${position}", Toast.LENGTH_SHORT).show()
-        loadUnloadFragProfile(true,searchUsersViewModel.userResponseLiveData.value!![position]!!.login)
-    }
 
     private lateinit var searchUsersViewModel: SearchUsersViewModel
     private val userListAdapter by lazy { UserListAdapter(this) }
     private var backPressCount = 0
+    private var queryText: String = ""
+    private var isFirstCall: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +51,12 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
          *Observing the livedata for list change and pass pagedList to adapter
          */
         searchUsersViewModel.userResponseLiveData.observe(this, Observer<PagedList<UsersResponse>> {
-            it?.let { userListAdapter.submitList(it) }
+            it?.let {
+                if(it.size > 0) {
+                    setUiVisibility(View.GONE)
+                }
+                userListAdapter.submitList(it)
+            }
         })
 
         /*
@@ -67,6 +70,12 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
          *Observing the network status to manage the paging ui while fetching data
          */
         searchUsersViewModel.networkState.observe(this, Observer {
+            if(isFirstCall && UserListAdapter.LOADING == it) {
+                Utils.showLoadingDialog(this)
+            } else if (isFirstCall && UserListAdapter.LOADED == it) {
+                isFirstCall = false
+                Utils.dismissLoadingDialog()
+            }
             it?.let { userListAdapter.setNetworkStatus(it) }
         })
 
@@ -92,14 +101,21 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
 
         btnSearch.setOnClickListener {
             if (!etSearchQuery.text.isNullOrEmpty()) {
-                setUiVisibility(View.GONE)
-                searchUsersViewModel.setQuery(etSearchQuery.text.toString())
-                searchUsersViewModel.searchPagedDataSourceFactory.searchPagedDataSource.invalidate()
-                Utils.hideKeyboard(this)
+                if (!queryText.equals(etSearchQuery.text.toString().trim())) {
+                    isFirstCall = true
+                    setUiVisibility(View.GONE)
+                    queryText = etSearchQuery.text.toString().trim()
+                    searchUsersViewModel.setQuery(etSearchQuery.text.toString().trim())
+                    searchUsersViewModel.searchPagedDataSourceFactory.searchPagedDataSource.invalidate()
+                    Utils.hideKeyboard(this)
+                } else {
+                    Toast.makeText(this,getString(R.string.please_enter_a_different_name),Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(this, getString(R.string.error_please_enter_a_name), Toast.LENGTH_SHORT).show()
             }
         }
+
         if(savedInstanceState != null) {
             if (supportFragmentManager.backStackEntryCount > 0
                 && supportFragmentManager.findFragmentByTag(ProfileInfoFragment::class.java.name) != null) {
@@ -120,6 +136,10 @@ class MainActivity : AppCompatActivity(), UserListAdapter.CallbackUserAction {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    override fun onUserClick(position: Int) {
+        loadUnloadFragProfile(true,searchUsersViewModel.userResponseLiveData.value!![position]!!.login)
     }
 
      /*

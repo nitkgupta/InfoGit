@@ -36,7 +36,7 @@ object Utils {
     }
 
     /*
-     *convert date in simplified and better UX
+     * @return date date in simplified form for better UX
      */
     private fun convertDate(dateTime: String): String {
         try {
@@ -132,11 +132,12 @@ object Utils {
      */
     fun showLoadingDialog(context: Context) {
         try {
-            if (dialog != null) {
+            dialog?.let {
                 if (dialog!!.isShowing) {
                     dialog?.dismiss()
                 }
             }
+
             if (context is Activity) {
                 if (context.isFinishing) {
                     return
@@ -147,6 +148,7 @@ object Utils {
             layoutParams.dimAmount = 0.6f
             dialog?.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
             dialog?.setCancelable(false)
+            dialog?.setCanceledOnTouchOutside(false)
             dialog?.setContentView(com.nitkarsh.infogit.R.layout.dialog_loading)
             dialog?.show()
         } catch (e: Exception) {
@@ -157,10 +159,10 @@ object Utils {
     //    dismiss the laoding dialog
     fun dismissLoadingDialog() {
         try {
-            if (dialog != null) {
+            dialog?.let {
                 dialog?.dismiss()
-                dialog = null
             }
+                dialog = null
         } catch (e: Exception) {
             Log.e("e", "=$e")
         }
