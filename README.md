@@ -25,3 +25,7 @@ _**Search :**_
 _**User Profile :**_
 <br><br>
 <img src="/images/SS2.png" width="400" height="700"/>
+
+<br><br>
+_**Followers :**_
+<br><br><img src="/images/SS 4.png" width="400" height="700"/>
